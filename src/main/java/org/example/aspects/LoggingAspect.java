@@ -1,36 +1,46 @@
 package org.example.aspects;
 
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+
 
 @Component
 @Aspect
 public class LoggingAspect {
 
-    @Before("execution(public int calculateSquare(int))")
-    public void beforeCalculateSquareAdvice() {
-        System.out.println("beforeCalculateSquareAdvice: Попытка вычислить квадрат числа");
+    @Before("@annotation(org.example.annotations.AdditionalLogging)")
+    public void beforeCalculateSquareAdvice(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        System.out.println("AdditionalLogging annotation: Попытка выполнить метод: " + methodName);
     }
 
-    @AfterReturning("execution(public int calculateSquare(int))")
-    public void afterReturnCalculateSquareAdvice() {
-        System.out.println("afterReturnCalculateSquareAdvice: Квадрат числа вычислен");
+    @AfterReturning("@annotation(org.example.annotations.AdditionalLogging)")
+    public void afterReturnCalculateSquareAdvice(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        System.out.println("AdditionalLogging annotation: Успешно возвращен метод: " + methodName);
     }
 
-    @AfterThrowing("execution(public int calculateSquare(int))")
-    public void afterThrowingCalculateSquareAdvice() {
-        System.out.println("afterThrowingCalculateSquareAdvice: Возникла ошибка при вычислении квадрата числа");
+    @AfterThrowing("@annotation(org.example.annotations.AdditionalLogging)")
+    public void afterThrowingCalculateSquareAdvice(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        System.out.println("AdditionalLogging annotation: Возникла ошибка при выполнении метода: " + methodName);
     }
 
-    @After("execution(public int calculateSquare(int))")
-    public void afterCalculateSquareAdvice() {
-        System.out.println("afterCalculateSquareAdvice: Метод calculateSquare завершил свою работу");
+    @After("@annotation(org.example.annotations.AdditionalLogging)")
+    public void afterCalculateSquareAdvice(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        System.out.println("AdditionalLogging annotation: " + methodName + " завершил свою работу");
     }
 
-    @Around("execution(public int calculateSquare(int))")
-    public void aroundCalculateSquareAdvice() {
-        System.out.println("aroundCalculateSquareAdvice: qqq");
-    }
+//    @Around("@annotation(org.example.annotations.AdditionalLogging)")
+//    public Object aroundCalculateSquareAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+//        String methodName = joinPoint.getSignature().getName();
+//        System.out.println("AdditionalLogging annotation: " + methodName +  " начал работу");
+//        Object result = joinPoint.proceed();
+//        System.out.println("AdditionalLogging annotation: " + methodName + " завершил работу");
+//        return result;
+//    }
 
 }
